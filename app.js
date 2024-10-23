@@ -7,6 +7,7 @@ const app = express();
 
 const viewRouter = require("./router/viewRouter");
 const contentRouter = require("./router/contentRouter");
+const imageRouter = require("./router/imageRouter");
 
 app.use(cors());
 
@@ -31,6 +32,7 @@ app.use((req, res, next) => {
 
 app.use("/", viewRouter);
 app.use("/v1/api/content", contentRouter);
+app.use("/v1/api/docs", imageRouter);
 
 app.use((err, req, res, next) => {
 
