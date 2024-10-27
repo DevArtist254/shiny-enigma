@@ -8,7 +8,16 @@ html(lang="en")
         main  
             h1 Create your post here
 
-            form#formPost  
+            form#formImage(enctype="multipart/form-data") 
+                label(for="imgNames") Unique name
+                input#imageName(type="text", name="name") 
+                br
+                label(for="imageCover") upload one image cover 
+                input#imageCover(type="file", name="imageCover")
+                br
+                label(for="images") upload three images 
+                input#images(type="file", name="images")
+                br
                 input(type="submit", value="submit")
     
     script(src="/js/index.js")
