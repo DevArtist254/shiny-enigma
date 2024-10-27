@@ -1,5 +1,6 @@
 const multer = require("multer");
 const sharp = require("sharp");
+const Image = require("../model/imageModel");
 
 const multerStorage = multer.memoryStorage();
 
@@ -23,7 +24,9 @@ exports.uploadImages = uploadImg.fields([
 
 exports.resizeImages = async (req, res, next) => {
   try {
-    req.body.imageCover = `${req.body.imageName}-imageCover-${req.requestTime}.webp`;
+    req.body.urlName = req.body.imageName.split(" ").join("-");
+
+    req.body.imageCover = `${req.body.urlName}-imageCover-${req.requestTime}.webp`;
 
     await sharp(req.files.imageCover[0].buffer)
       .resize(2000, 1333)
@@ -35,7 +38,7 @@ exports.resizeImages = async (req, res, next) => {
     
     await Promise.all(
         req.files.images.map(async (file, i) => {
-            const filename = `${req.body.imageName}-images${i + 1}-${req.requestTime}.webp`;
+            const filename = `${req.body.urlName}-images${i + 1}-${req.requestTime}.webp`;
 
             await sharp(file.buffer)
               .resize(2000, 1333)
@@ -53,11 +56,17 @@ exports.resizeImages = async (req, res, next) => {
   }
 };
 
-exports.createImage = (req, res, next) => {
-  console.log(req.body.imageCover);
-  console.log(req.body.images);
+exports.createImage = async (req, res, next) => {
+  try {
+    const doc = await Image.create(req.body);
 
-  res.status(200).json({
-    message: "success",
-  });
+     res.status(200).json({
+       message: "success",
+       data: {
+        doc
+       }
+     }); 
+  } catch (error) {
+    console.log(`${error.message}`);
+  }
 };
